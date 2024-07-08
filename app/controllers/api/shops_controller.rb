@@ -8,11 +8,12 @@ class Api::ShopsController < ApplicationController
 
   end
 
-  def categories
-    render json: Category.all
-  end
-
-  def products
+  def create
     render json: Product.all
   end
+
+  def categories
+    render json: Category.find_by(params[:id])
+  end
+
 end
