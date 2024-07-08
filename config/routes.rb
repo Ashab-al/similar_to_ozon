@@ -5,5 +5,6 @@ Rails.application.routes.draw do
     resources :shops, only: [:index, :show]
     get '/categories', to: 'shops#categories'
     get '/products', to: 'shops#products'
+    post '/create', to: 'shops#create'
   end
 end
