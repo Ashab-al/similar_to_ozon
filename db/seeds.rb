@@ -7,3 +7,31 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+rand_num = rand(1000)
+user = User.create!(
+    name: "Пользователь #{rand_num}", 
+    last_name: "Фамилия",
+    phone: "7 999 999 99 99",
+    email: "example@mail.com",
+    age: 20
+)
+
+user.stores.create!(
+    name: "Магазин #{rand_num}",
+    description: "Описание магазина"
+)
+
+category = Category.create!(
+    title: "Категория №#{rand_num}",
+    description: "Описание категории"
+)
+
+
+store = user.stores.last
+
+store.products.create!(
+    name: "Продукт #{rand_num}",
+    description: "Описание",
+    category: category
+)

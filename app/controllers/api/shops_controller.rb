@@ -1,7 +1,8 @@
 class Api::ShopsController < ApplicationController
 
   def index
-
+    result_search_store = Api::Store::Index::SearchStoreInteractor.call({:store_id => params[:id]})
+    
   end
 
   def show
