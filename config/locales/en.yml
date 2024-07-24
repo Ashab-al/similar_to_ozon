@@ -28,4 +28,4 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  not_validated_params: "Parameters were not validated"

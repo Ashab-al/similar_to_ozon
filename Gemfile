@@ -15,7 +15,8 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
 
 # custom gems
-gem 'interactor'
+gem 'active_interaction', '~> 5.3'
+gem 'i18n'
 # end
 
 group :development, :test do
