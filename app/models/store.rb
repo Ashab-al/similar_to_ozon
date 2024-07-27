@@ -14,4 +14,8 @@ class Store < ApplicationRecord
      .having('COUNT(products.id) <= ?', count)
     end
   }
+
+  scope :less_and_greater_than_products, ->(less_than, greater_than) {
+    less_than_products(less_than).merge(greater_than_products(greater_than))
+  }
 end
