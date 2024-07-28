@@ -33,3 +33,4 @@ en:
       not_validated_params: "Parameters were not validated"
       not_valid_sorting: "%{value} is not a valid sorting order"
       none_filters_worked: "none of the filters worked"
+      cannot_be_more_gthen: "less than cannot be more than greater_than"

@@ -1,10 +1,10 @@
 class Api::ShopsController < ApplicationController
 
   def index
-    result_sort_store = Api::Store::Index::SortStoreInteractor.execute(sort_params)
+    result_sort_store = Api::Store::Index::SortStoreInteractor.new(sort_params).run
     
-    if result_sort_store
-      render json: result_sort_store, status: :ok
+    unless result_sort_store.errors
+      render json: result_sort_store.result, status: :ok
     else
       render json: result_sort_store.errors, status: :unprocessable_entity
     end
