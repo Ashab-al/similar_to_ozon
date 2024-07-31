@@ -1,8 +1,7 @@
 class Api::ShopsController < ApplicationController
 
   def index
-    result_sort_store = Api::Store::Index::SortStoreInteractor.new(sort_params).run
-    
+    result_sort_store = Api::Store::Index::SortStoreInteractor.run(sort_params)
     unless result_sort_store.errors
       render json: result_sort_store.result, status: :ok
     else
@@ -34,6 +33,6 @@ class Api::ShopsController < ApplicationController
   end
 
   def sort_params
-    params.permit(:sort_store).permit(:less_than, :greater_than, :asc_or_desc)
+    params
   end
 end
