@@ -20,6 +20,7 @@ gem 'i18n'
 # end
 
 group :development, :test do
+  gem 'pry'
   gem "debug", platforms: %i[ mri windows ]
 end
 
