@@ -1,7 +1,7 @@
 class Api::ShopsController < ApplicationController
 
   def index
-    outcome = Api::Store::Index::SortStoreInteractor.run(sort_params)
+    outcome = Api::Store::SortStoreInteractor.run(sort_params)
     return render json: {success: false, message: 'i18n error here' }, status: :unprocessable_entity if outcome.errors.present?
       
     render json: {success: true, shops: outcome.result }, status: :ok
@@ -31,6 +31,6 @@ class Api::ShopsController < ApplicationController
   end
 
   def sort_params
-    params
+    params.require(:sort_store).permit(:asc_or_desc, :greater_than, :less_than)
   end
 end
