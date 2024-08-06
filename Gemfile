@@ -22,6 +22,7 @@ gem 'i18n'
 group :development, :test do
   gem 'pry'
   gem "debug", platforms: %i[ mri windows ]
+  gem 'factory_bot_rails'
 end
 
 group :development do
@@ -32,5 +33,4 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
   gem 'rspec-rails'
-  gem 'factory_bot_rails'
 end
