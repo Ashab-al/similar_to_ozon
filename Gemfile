@@ -21,6 +21,8 @@ gem 'i18n'
 
 group :development, :test do
   gem 'pry'
+  gem 'pry-rails' 
+  gem 'pry-byebug' 
   gem "debug", platforms: %i[ mri windows ]
   gem 'factory_bot_rails'
 end

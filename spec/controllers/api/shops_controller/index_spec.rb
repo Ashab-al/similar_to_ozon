@@ -19,7 +19,7 @@ RSpec.describe Api::ShopsController, type: :controller do
 
   
   context "Success" do 
-    it "passing the asc_or_desc parameter http status answer" do 
+    it "passing the asc_or_desc parameter (http status answer)" do 
       get :index, params: { :sort_store => {:asc_or_desc => 'DESC'} }
 
       expect(response).to have_http_status(:ok)

@@ -1,23 +1,18 @@
-class Api::Store::CreateStoreInteractor
-  include Interactor
+class Api::Store::CreateStoreInteractor < ActiveInteraction::Base
 
-  def call
-    user = search_user(context.user_id)
+  integer :user_id, presence: true
+  string :name, presence: true
+  string :description, presence: true
 
-    store = user.stores.build(context.name, context.description)
-    if store.save
-      context.store = store
-    else 
-      context.fail!(errors: store.errors)
-    end
-  end
 
-  def search_user(user_id)
-    user = User.find_by(user_id)
-    if user.nil?
-      context.fail!(errors: {user: "not found"})
-    end
+  def execute
+    user = User.find_by(id: user_id )
+    return errors.add(:user, :invalid) unless user 
 
-    user
+    store = user.stores.build(name: name, description: description)
+
+    return store if store.save
+
+    errors.add(:params, "ПОМЕНЯТЬ ТУТ")
   end
 end

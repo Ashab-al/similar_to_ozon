@@ -2,26 +2,30 @@ class Api::ShopsController < ApplicationController
 
   def index
     outcome = Api::Store::SortStoreInteractor.run(sort_params)
-    return render json: {success: false, message: 'i18n error here' }, status: :unprocessable_entity if outcome.errors.present?
+    return render json: {success: false, message: 'ПОМЕНЯТЬ' }, status: :unprocessable_entity if outcome.errors.present?
       
     render json: {success: true, shops: outcome.result }, status: :ok
   end
 
   def show
+    outcome = Api::Store::SearchStoreInteractor.run(params)
 
+    return render json: {success: false, message: 'ПОМЕНЯТЬ' }, status: :unprocessable_entity if outcome.errors.present?
+    render json: {success: true, shop: outcome.result }, status: :ok
   end
 
   def create
-    result_create_store = Api::Store::CreateStoreInteractor.call(store_params)
-    if result_create_store.success?
-      render json: result_create_store.store, status: :created
-    else
-      render json: {errors: result_create_store.errors}, status: :unprocessable_entity
-    end
+    outcome = Api::Store::CreateStoreInteractor.run(store_params)
+
+    return render json: {success: false, message: 'ПОМЕНЯТЬ' }, status: :unprocessable_entity if outcome.errors.present?
+    render json: {success: true, shop: outcome.result }, status: :ok
   end
 
   def categories
-    render json: Category.find_by(params[:id])
+    outcome = Api::Store::SearchCategoryInteractor.run(params)
+    
+    return render json: {success: false, message: 'ПОМЕНЯТЬ' }, status: :unprocessable_entity if outcome.errors.present?
+    render json: {success: true, category: outcome.result }, status: :ok
   end
 
   private
