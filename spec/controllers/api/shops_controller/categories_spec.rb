@@ -9,49 +9,78 @@ RSpec.describe Api::ShopsController, type: :controller do
   let (:category_str) { "asdasd" }
   let (:negative_number) { rand(-100..-1) }
 
+  let (:params) { { :id => category.id } }
+  before (:each) { get :categories, params: params }
+
   context "Success" do
-    it "successful finding of the category (http status answer)" do 
-      get :categories, params: { :id => category.id }
-      
+    it "successful finding of the category (http status answer)" do       
       expect(response).to have_http_status(:ok)
     end
 
     it "successful finding of the category (http status answer)" do 
-      get :categories, params: { :id => category.id }
-      
       expect(JSON.parse(response.body)["category"]).to eq(JSON.parse(category.to_json))
     end
   end
 
   context "Failure" do 
-    it "empty parameters for categories" do 
-      get :categories
+    context "empty parametr" do 
+      let (:params) { nil }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      it "empty parameter for categories (http status)" do 
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "empty parameter for categories (error message)" do 
+        expect(JSON.parse(response.body)["message"].first["name"]).to eq(I18n.t("error.messages.missing"))
+      end
+    end
+    
+    context "nil parameter" do 
+      let (:params) { { id: category_nil } }
+
+      it "nil parameter for categories (http status)" do 
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "nil parameter for categories (error message)" do 
+        expect(JSON.parse(response.body)["message"].first["name"]).to eq(I18n.t("error.messages.missing"))
+      end
+    end
+    
+    context "string parameter" do 
+      let (:params) { { id: category_str } }
+
+      it "string parameter for categories (http status)" do 
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "string parameter for categories (error message)" do 
+        expect(JSON.parse(response.body)["message"].first["name"]).to eq(I18n.t("error.messages.invalid_type"))
+      end
+    end
+    
+    context "random nubmer parameter" do 
+      let (:params) { { id: not_existing_category } }
+
+      it "random number parameter for categories (http status)" do 
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "random number parameter for categories (error message)" do 
+        expect(JSON.parse(response.body)["message"].first["name"]).to eq(I18n.t("error.messages.category_not_found"))
+      end
     end
 
-    it "nil parameter for categories" do 
-      get :categories, params: { id: category_nil }
+    context "negative number" do 
+      let (:params) { { id: negative_number } }
 
-      expect(response).to have_http_status(:unprocessable_entity)
-    end
+      it "negative number parameter for categories (http status)" do 
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
 
-    it "string parameter for categories" do 
-      get :categories, params: { id: category_str }
-
-      expect(response).to have_http_status(:unprocessable_entity)
-    end
-
-    it "random number parameter for categories" do 
-      get :categories, params: { id: not_existing_category }
-
-      expect(response).to have_http_status(:unprocessable_entity)
-    end
-
-    it "negative number parameter for categories" do 
-      get :categories, params: { id: negative_number }
-
-      expect(response).to have_http_status(:unprocessable_entity)
+      it "negative number parameter for categories (error message)" do 
+        expect(JSON.parse(response.body)["message"].first["name"]).to eq(I18n.t("error.messages.category_not_found"))
+      end
     end
   end
 end

@@ -17,7 +17,10 @@ RSpec.describe Api::ShopsController, type: :controller do
   let (:less_than_more_greater_than) { rand(11...15) }
   let (:incorrect_parametr) { "aasdadasd" }
 
-  
+  let (:params) { {:sort_store => {:asc_or_desc => 'DESC'}} }
+
+  before (:each) { get :index, params: params }
+
   context "Success" do 
     it "passing the asc_or_desc parameter (http status answer)" do 
       get :index, params: { :sort_store => {:asc_or_desc => 'DESC'} }
@@ -66,50 +69,93 @@ RSpec.describe Api::ShopsController, type: :controller do
   
   context "Failure" do
     it "empty parameters for index" do 
+      # TODO потом поправить
       expect{ get :index }.to raise_error(ActionController::ParameterMissing)
     end
+    context "less_than is more than greater_than" do 
+      let (:params) { {:sort_store => { :less_than => less_than_more_greater_than, :greater_than => greater_than }} }
 
-    it "less_than is more than greater_than" do 
-      get :index, params: {:sort_store => { :less_than => less_than_more_greater_than, :greater_than => greater_than } }
+      it "less_than > greater_than (http status)" do 
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      it "less_than > greater_than (error message)" do 
+        expect(JSON.parse(response.body)["message"].first["name"]).to eq(I18n.t("error.messages.cannot_be_more_gthen"))
+      end
     end
 
-    it "incorrect parameter was passed asc_or_desc" do 
-      get :index, params: { :sort_store => { :greater_than => incorrect_parametr } }
+    context "incorrect parameter asc_or_desc" do 
+      let (:params) { {:sort_store => { :greater_than => incorrect_parametr }} }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      it "incorrect parameter was passed asc_or_desc (http status)" do 
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "incorrect parameter was passed asc_or_desc (error message)" do 
+        expect(JSON.parse(response.body)["message"].first["name"]).to eq(I18n.t("error.messages.invalid_type"))
+      end
     end
 
-    it "incorrect parameter was passed less_than" do 
-      get :index, params: { :sort_store => { :less_than => incorrect_parametr } }
+    context "incorrect parameter less_than" do 
+      let (:params) { {:sort_store => { :less_than => incorrect_parametr }} }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      it "incorrect parameter was passed less_than (http status)" do 
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "incorrect parameter was passed less_than (error message)" do 
+        expect(JSON.parse(response.body)["message"].first["name"]).to eq(I18n.t("error.messages.invalid_type"))
+      end
     end
 
-    it "incorrect parameter was passed greater_than" do 
-      get :index, params: { :sort_store => { :greater_than => incorrect_parametr } }
+    context "incorrect parameter greater_than" do 
+      let (:params) { {:sort_store => { :greater_than => incorrect_parametr }} }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      it "incorrect parameter was passed greater_than (http status)" do 
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "incorrect parameter was passed greater_than (error message)" do 
+        expect(JSON.parse(response.body)["message"].first["name"]).to eq(I18n.t("error.messages.invalid_type"))
+      end
     end
+
 
     context "passing the wrong greater_than and less_than" do 
-      it "passing greater_than and less_than, but greater_than is incorrect" do 
-        get :index, params: { :sort_store => { :less_than => less_than, :greater_than => incorrect_parametr } }
+      context "passing greater_than and less_than, but greater_than is incorrect" do 
+        let (:params) { {:sort_store => { :less_than => less_than, :greater_than => incorrect_parametr }} }
+        
+        it "incorrect parameter greater_than (http status)" do 
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        it "incorrect parameter greater_than (error message)" do 
+          expect(JSON.parse(response.body)["message"].first["name"]).to eq(I18n.t("error.messages.invalid_type"))
+        end
       end
+      
+      context "passing greater_than and less_than, but less_than is incorrect" do
+        let (:params) { {:sort_store => { :less_than => incorrect_parametr, :greater_than => greater_than }} }
 
-      it "passing greater_than and less_than, but less_than is incorrect" do 
-        get :index, params: { :sort_store => { :less_than => incorrect_parametr, :greater_than => greater_than } }
+        it "incorrect parameter less_than (http status)" do 
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        it "incorrect parameter less_than (error message)" do 
+          expect(JSON.parse(response.body)["message"].first["name"]).to eq(I18n.t("error.messages.invalid_type"))
+        end
       end
+      
+      context "passing greater_than and less_than, but both are wrong" do 
+        let (:params) { {:sort_store => { :less_than => incorrect_parametr, :greater_than => incorrect_parametr }} }
 
-      it "passing greater_than and less_than, but both are wrong" do 
-        get :index, params: { :sort_store => { :less_than => incorrect_parametr, :greater_than => incorrect_parametr } }
+        it "incorrect parameters less_than and greater_than (http status)" do 
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        it "incorrect parameters less_than and greater_than (error message)" do 
+          expect(JSON.parse(response.body)["message"].first["name"]).to eq(I18n.t("error.messages.invalid_type"))
+        end
       end
     end
   end

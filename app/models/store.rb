@@ -1,6 +1,10 @@
 class Store < ApplicationRecord
   belongs_to :user
   has_many :products
+  
+  validates :name, presence: true, length: { minimum: 2, maximum: 30 }
+  validates :description, presence: true, length: { minimum: 2, maximum: 5000 }
+
 
   scope :with_product_count, -> {
     left_joins(:products)

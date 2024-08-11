@@ -11,8 +11,8 @@ class Api::Store::CreateStoreInteractor < ActiveInteraction::Base
 
     store = user.stores.build(name: name, description: description)
 
-    return store if store.save
+    return errors.add(:params, I18n.t("error.messages.store_not_create")) unless store.save
 
-    errors.add(:params, "ПОМЕНЯТЬ ТУТ")
+    store
   end
 end
