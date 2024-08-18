@@ -7,4 +7,8 @@ Rails.application.routes.draw do
     get '/products', to: 'shops#products'
     post '/create', to: 'shops#create'
   end
+
+  namespace :endpoints do
+    resources :products, only: [:index, :show, :create]
+  end
 end

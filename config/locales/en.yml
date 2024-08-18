@@ -11,5 +11,6 @@ en:
       could_not_find_the_store: "The store could not be found using the transmitted id"
       invalid: "invalid"
       missing: "missing"
-      invalid_type: "invalid_type"
+      invalid_type: "invalid_type"\
+      product_not_found: "The product could not be found by the passed id"
 
