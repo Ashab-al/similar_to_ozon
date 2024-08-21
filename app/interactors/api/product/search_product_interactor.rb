@@ -1,4 +1,4 @@
-class Product::SearchProductInteractor < ActiveInteraction::Base
+class Api::Product::SearchProductInteractor < ActiveInteraction::Base
   integer :id, presence: true
 
   def execute

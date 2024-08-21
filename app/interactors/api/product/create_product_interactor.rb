@@ -1,4 +1,4 @@
-class Product::CreateProductInteractor < ActiveInteraction::Base
+class Api::Product::CreateProductInteractor < ActiveInteraction::Base
 
   integer :category_id, presence: true
   integer :store_id, presence: true
@@ -7,9 +7,7 @@ class Product::CreateProductInteractor < ActiveInteraction::Base
   string :description, presence: true
 
 
-  def execute
-    return update_product if product_id
-    
+  def execute    
     category = Category.find_by(id: category_id )
     store = Store.find_by(id: store_id)
 
@@ -23,12 +21,5 @@ class Product::CreateProductInteractor < ActiveInteraction::Base
     return errors.add(:params, I18n.t("error.messages.store_not_create")) unless product.save
 
     product
-  end
-
-  def update_product
-    product = Product.find_by(id: product_id)
-    return product.update({name: name, description: description}) if product
-
-    errors.add(:params, I18n.t("error.messages.product_not_found"))
   end
 end

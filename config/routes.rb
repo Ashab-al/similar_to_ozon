@@ -4,11 +4,7 @@ Rails.application.routes.draw do
   namespace :api do 
     resources :shops, only: [:index, :show]
     get '/categories', to: 'shops#categories'
-    get '/products', to: 'shops#products'
     post '/create', to: 'shops#create'
-  end
-
-  namespace :endpoints do
-    resources :products, only: [:index, :show, :create]
+    resources :products, only: [:show, :create, :update]
   end
 end
