@@ -7,5 +7,6 @@ FactoryBot.define do
     age { 20 }
     role { :admin }
     address { "Д.Бедного" }
+    password { "admin123#@!#!" }
   end
 end

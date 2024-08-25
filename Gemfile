@@ -17,6 +17,10 @@ gem "bootsnap", require: false
 # custom gems
 gem 'active_interaction', '~> 5.3'
 gem 'i18n'
+gem 'rack-cors'
+gem 'devise'
+gem 'devise-jwt'
+gem 'jsonapi-serializer'
 # end
 
 group :development, :test do
