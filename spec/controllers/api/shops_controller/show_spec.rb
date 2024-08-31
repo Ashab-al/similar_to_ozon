@@ -2,7 +2,11 @@ require 'rails_helper'
 
 
 RSpec.describe Api::ShopsController, type: :controller do 
-  
+  include Devise::Test::ControllerHelpers
+
+  render_views
+  include ApiHelper
+
   let! (:user) { create(:user) }
   let! (:store_1) { create(:store, user: user) }
 
@@ -11,19 +15,35 @@ RSpec.describe Api::ShopsController, type: :controller do
   let (:negative_number) { rand(-100..-1) }
   let (:params) { { :id => store_1.id } }
 
+  
   before (:each) { get :show, params: params }
 
-  context "Success" do 
-    it "successful finding of the store (http status answer)" do 
-      expect(response).to have_http_status(:ok)
-    end
 
-    it "successful finding of the store (json answer)" do 
-      expect(JSON.parse(response.body)["shop"]).to eq(JSON.parse(store_1.to_json))
+  context "when signed in" do  
+    context "Success" do 
+      before do 
+        authenticated_header(request, user)
+      end
+      
+      it "successful finding of the store (http status answer)" do 
+        get :show, params: params
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "successful finding of the store (json answer)" do 
+        get :show, params: params
+
+        expect(JSON.parse(response.body)["shop"]).to eq(JSON.parse(store_1.to_json))
+      end
     end
   end
 
   context "Failure" do
+    before do 
+      authenticated_header(request, user)
+    end
+
     context "empty parameters" do 
       it "empty parameters for show" do 
         # TODO потом поправить
