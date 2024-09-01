@@ -2,6 +2,11 @@ require 'rails_helper'
 
 
 RSpec.describe Api::ShopsController, type: :controller do 
+  include Devise::Test::ControllerHelpers
+
+  render_views
+  include ApiHelper
+  
   let! (:user) { create(:user) }
   let! (:category) { create(:category) }
   let! (:store_1) { create(:store, user: user) }
@@ -22,6 +27,10 @@ RSpec.describe Api::ShopsController, type: :controller do
   before (:each) { get :index, params: params }
 
   context "Success" do 
+    before do 
+      authenticated_header(request, user)
+    end
+    
     it "passing the asc_or_desc parameter (http status answer)" do 
       get :index, params: { :sort_store => {:asc_or_desc => 'DESC'} }
 
@@ -68,6 +77,10 @@ RSpec.describe Api::ShopsController, type: :controller do
   end
   
   context "Failure" do
+    before do 
+      authenticated_header(request, user)
+    end
+    
     it "empty parameters for index" do 
       # TODO потом поправить
       expect{ get :index }.to raise_error(ActionController::ParameterMissing)
