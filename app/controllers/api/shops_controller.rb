@@ -1,5 +1,6 @@
 class Api::ShopsController < ApplicationController
-
+  before_action :authenticate_user!
+  
   def index
     outcome = Api::Store::SortStoreInteractor.run(sort_params)
     return render json: {success: false, message: errors_converter(outcome.errors) }, status: :unprocessable_entity if outcome.errors.present?
@@ -8,6 +9,7 @@ class Api::ShopsController < ApplicationController
   end
 
   def show
+    # binding.pry
     begin
       outcome = FindStoreInteractor.run(params)
 

@@ -2,7 +2,12 @@ require 'rails_helper'
 
 
 RSpec.describe Api::ShopsController, type: :controller do 
+  include Devise::Test::ControllerHelpers
 
+  render_views
+  include ApiHelper::Request
+  
+  let! (:user) { create(:user) }
   let! (:category) { create(:category) }
   let (:not_existing_category) { rand(5..100) }
   let (:category_nil) { nil }
@@ -10,6 +15,18 @@ RSpec.describe Api::ShopsController, type: :controller do
   let (:negative_number) { rand(-100..-1) }
 
   let (:params) { { :id => category.id } }
+
+  let (:headers) do
+    request.headers.merge!(
+    {
+      'Authorization' => "Bearer #{jwt_token(user.id.to_s)}"
+    })
+  end
+
+  before do
+    sign_in(user, scope: :user)
+  end
+
   before (:each) { get :categories, params: params }
 
   context "Success" do

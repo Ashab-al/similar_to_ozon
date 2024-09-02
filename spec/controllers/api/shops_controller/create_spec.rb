@@ -5,7 +5,7 @@ RSpec.describe Api::ShopsController, type: :controller do
   include Devise::Test::ControllerHelpers
 
   render_views
-  include ApiHelper
+  include ApiHelper::Request
 
   let! (:user) { create(:user) }
   let (:name) { "Name #{rand(999)}" }
@@ -15,12 +15,21 @@ RSpec.describe Api::ShopsController, type: :controller do
   let (:name_nil) { nil }
   let (:description_nil) { nil }
   let (:params) {{ :store => { :user_id => user.id, :name => name, :description => description } }}
+
+  let (:headers) do
+    request.headers.merge!(
+    {
+      'Authorization' => "Bearer #{jwt_token(user.id.to_s)}"
+    })
+  end
+
+  before do
+    sign_in(user, scope: :user)
+  end
+
   before (:each) { post :create, params: params }
 
   context "Success" do
-    before do 
-      authenticated_header(request, user)
-    end
 
     it "store was successfully created" do 
       expect(response).to have_http_status(:ok)
@@ -40,9 +49,6 @@ RSpec.describe Api::ShopsController, type: :controller do
   end
 
   context "Failure" do
-    before do 
-      authenticated_header(request, user)
-    end
     
     context "emtpy params" do 
       let (:params) {{ :store => nil }}

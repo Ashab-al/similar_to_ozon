@@ -5,7 +5,7 @@ RSpec.describe Api::ShopsController, type: :controller do
   include Devise::Test::ControllerHelpers
 
   render_views
-  include ApiHelper
+  include ApiHelper::Request
 
   let! (:user) { create(:user) }
   let! (:store_1) { create(:store, user: user) }
@@ -14,17 +14,23 @@ RSpec.describe Api::ShopsController, type: :controller do
   let (:string_params) { "asdasd" }
   let (:negative_number) { rand(-100..-1) }
   let (:params) { { :id => store_1.id } }
+  let (:headers) do
+    request.headers.merge!(
+    {
+      'Authorization' => "Bearer #{jwt_token(user.id.to_s)}"
+    })
+  end
 
+  before do
+    sign_in(user, scope: :user)
+  end
   
-  before (:each) { get :show, params: params }
-
+  before(:each) do
+    get :show, params: params
+  end
 
   context "when signed in" do  
     context "Success" do 
-      before do 
-        authenticated_header(request, user)
-      end
-      
       it "successful finding of the store (http status answer)" do 
         get :show, params: params
 
@@ -40,13 +46,8 @@ RSpec.describe Api::ShopsController, type: :controller do
   end
 
   context "Failure" do
-    before do 
-      authenticated_header(request, user)
-    end
-
     context "empty parameters" do 
       it "empty parameters for show" do 
-        # TODO потом поправить
         expect{ get :show }.to raise_error(ActionController::UrlGenerationError)
       end
     end
