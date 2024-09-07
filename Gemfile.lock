@@ -84,6 +84,7 @@ GEM
     bcrypt (3.1.20)
     bigdecimal (3.1.8)
     bindex (0.8.1)
+    blueprinter (1.1.0)
     bootsnap (1.18.3)
       msgpack (~> 1.2)
     builder (3.3.0)
@@ -188,7 +189,11 @@ GEM
       racc (~> 1.4)
     nokogiri (1.16.6-x86_64-linux)
       racc (~> 1.4)
+    oj (3.16.5)
+      bigdecimal (>= 3.0)
+      ostruct (>= 0.2)
     orm_adapter (0.5.0)
+    ostruct (0.6.0)
     pg (1.5.6)
     pry (0.14.2)
       coderay (~> 1.1)
@@ -332,6 +337,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_interaction (~> 5.3)
+  blueprinter
   bootsnap
   capybara
   debug
@@ -342,6 +348,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   jsonapi-serializer
+  oj
   pg (~> 1.1)
   pry
   pry-byebug

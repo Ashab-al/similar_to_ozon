@@ -1,6 +1,12 @@
 class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
 
+  def success!(payload = {}, code = nil)
+    code ||= :ok
+
+    render json: { success: true, payload: payload }, status: code
+  end
+  
   protected
 
   def configure_permitted_parameters

@@ -3,9 +3,10 @@ require 'rails_helper'
 
 RSpec.describe Api::ShopsController, type: :controller do 
   include Devise::Test::ControllerHelpers
+  include ApiHelper::Request
+  include Helpers::Responses::Shops
 
   render_views
-  include ApiHelper::Request
 
   let! (:user) { create(:user) }
   let (:name) { "Name #{rand(999)}" }
@@ -36,15 +37,15 @@ RSpec.describe Api::ShopsController, type: :controller do
     end
 
     it "required name is returned" do 
-      expect(JSON.parse(response.body)["shop"]["name"]).to eq(name)
+      expect(JSON.parse(JSON.parse(response.body)["payload"])["name"]).to eq(name)
     end 
 
     it "required description is returned" do 
-      expect(JSON.parse(response.body)["shop"]["description"]).to eq(description)
+      expect(JSON.parse(JSON.parse(response.body)["payload"])["description"]).to eq(description)
     end 
 
     it "required user_id is returned" do 
-      expect(JSON.parse(response.body)["shop"]["user_id"]).to eq(user.id)
+      expect(JSON.parse(JSON.parse(response.body)["payload"])["user_id"]).to eq(user.id)
     end 
   end
 

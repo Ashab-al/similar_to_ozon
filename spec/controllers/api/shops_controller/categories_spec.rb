@@ -3,9 +3,10 @@ require 'rails_helper'
 
 RSpec.describe Api::ShopsController, type: :controller do 
   include Devise::Test::ControllerHelpers
+  include ApiHelper::Request
+  include Helpers::Responses::Category
 
   render_views
-  include ApiHelper::Request
   
   let! (:user) { create(:user) }
   let! (:category) { create(:category) }
@@ -35,7 +36,7 @@ RSpec.describe Api::ShopsController, type: :controller do
     end
 
     it "successful finding of the category (http status answer)" do 
-      expect(JSON.parse(response.body)["category"]).to eq(JSON.parse(category.to_json))
+      expect(JSON.parse(JSON.parse(response.body)["payload"])).to eq(category_external_response(category))
     end
   end
 

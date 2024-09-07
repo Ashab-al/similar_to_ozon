@@ -3,9 +3,11 @@ require 'rails_helper'
 
 RSpec.describe Api::ShopsController, type: :controller do 
   include Devise::Test::ControllerHelpers
-
-  render_views
   include ApiHelper::Request
+  include Helpers::Responses::Shops
+  
+  render_views
+  
 
   let! (:user) { create(:user) }
   let! (:store_1) { create(:store, user: user) }
@@ -40,7 +42,7 @@ RSpec.describe Api::ShopsController, type: :controller do
       it "successful finding of the store (json answer)" do 
         get :show, params: params
 
-        expect(JSON.parse(response.body)["shop"]).to eq(JSON.parse(store_1.to_json))
+        expect(JSON.parse(JSON.parse(response.body)["payload"])).to eq(shop_external_response(store_1))
       end
     end
   end

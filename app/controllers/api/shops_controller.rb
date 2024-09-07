@@ -4,8 +4,7 @@ class Api::ShopsController < ApplicationController
   def index
     outcome = Api::Store::SortStoreInteractor.run(sort_params)
     return render json: {success: false, message: errors_converter(outcome.errors) }, status: :unprocessable_entity if outcome.errors.present?
-      
-    render json: {success: true, shops: outcome.result }, status: :ok
+    success!(ShopBlueprint.render(outcome.result))
   end
 
   def show
@@ -14,7 +13,7 @@ class Api::ShopsController < ApplicationController
       outcome = FindStoreInteractor.run(params)
 
       return render json: {success: false, message: errors_converter(outcome.errors) }, status: :unprocessable_entity if outcome.errors.present?
-      render json: {success: true, shop: outcome.result }, status: :ok
+      success!(ShopBlueprint.render(outcome.result))
 
     rescue ActionController::UrlGenerationError
       return render json: {success: false, message: I18n.t("error.messages.not_validated_params") }, status: :unprocessable_entity
@@ -26,7 +25,7 @@ class Api::ShopsController < ApplicationController
       outcome = Api::Store::CreateStoreInteractor.run(store_params)
 
       return render json: {success: false, message: errors_converter(outcome.errors) }, status: :unprocessable_entity if outcome.errors.present?
-      render json: {success: true, shop: outcome.result }, status: :ok
+      success!(ShopBlueprint.render(outcome.result))
     rescue ActionController::ParameterMissing
       return render json: {success: false, message: I18n.t("error.messages.not_validated_params") }, status: :unprocessable_entity
     end
@@ -36,7 +35,8 @@ class Api::ShopsController < ApplicationController
     outcome = Api::Store::SearchCategoryInteractor.run(params)
     
     return render json: {success: false, message: errors_converter(outcome.errors) }, status: :unprocessable_entity if outcome.errors.present?
-    render json: {success: true, category: outcome.result }, status: :ok
+
+    success!(CategoryBlueprint.render(outcome.result))
   end
 
   private

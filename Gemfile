@@ -21,6 +21,8 @@ gem 'rack-cors'
 gem 'devise'
 gem 'devise-jwt'
 gem 'jsonapi-serializer'
+gem 'blueprinter'
+gem 'oj'
 # end
 
 group :development, :test do
