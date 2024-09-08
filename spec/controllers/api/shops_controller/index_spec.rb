@@ -3,9 +3,11 @@ require 'rails_helper'
 
 RSpec.describe Api::ShopsController, type: :controller do 
   include Devise::Test::ControllerHelpers
+  include ApiHelper::Request
+  include Helpers::Responses::Shops
 
   render_views
-  include ApiHelper::Request
+  
   
   let! (:user) { create(:user) }
   let! (:category) { create(:category) }
@@ -46,8 +48,8 @@ RSpec.describe Api::ShopsController, type: :controller do
     end
     it "passing the asc_or_desc parameter (json answer)" do 
       get :index, params: { :sort_store => { :asc_or_desc => 'DESC' } }
-
-      expect(JSON.parse(response.body)["shops"]).to eq(JSON.parse(Store.with_product_count.order(products_count: :desc).to_json))
+      # binding.pry
+      expect(JSON.parse(JSON.parse(response.body)["shops"])).to eq(shops_external_response(Store.with_product_count.order(products_count: :desc)))
     end
 
     it "passing the parameter greater_than (https status answer)" do 
@@ -58,7 +60,7 @@ RSpec.describe Api::ShopsController, type: :controller do
     it "passing the parameter greater_than (json answer)" do 
       get :index, params: { :sort_store => { :greater_than => greater_than } }
 
-      expect(JSON.parse(response.body)["shops"]).to eq(JSON.parse(Store.greater_than_products(greater_than).to_json))
+      expect(JSON.parse(JSON.parse(response.body)["shops"])).to eq(shops_external_response(Store.greater_than_products(greater_than)))
     end
 
     it "passing the parameter less_than (https status answer)" do 
@@ -69,7 +71,7 @@ RSpec.describe Api::ShopsController, type: :controller do
     it "passing the parameter less_than (json answer)" do 
       get :index, params: { :sort_store => { :less_than => less_than } }
 
-      expect(JSON.parse(response.body)["shops"]).to eq(JSON.parse(Store.less_than_products(less_than).to_json))
+      expect(JSON.parse(JSON.parse(response.body)["shops"])).to eq(shops_external_response(Store.less_than_products(less_than)))
     end
 
     it "passing the parameter greater_than and less_than (https status answer)" do 
@@ -80,7 +82,7 @@ RSpec.describe Api::ShopsController, type: :controller do
     it "passing the parameter greater_than and less_than (json answer)" do 
       get :index, params: { :sort_store => { :greater_than => greater_than, :less_than => less_than } }
 
-      expect(JSON.parse(response.body)["shops"]).to eq(JSON.parse(Store.less_and_greater_than_products(less_than, greater_than).to_json))
+      expect(JSON.parse(JSON.parse(response.body)["shops"])).to eq(shops_external_response(Store.less_and_greater_than_products(less_than, greater_than)))
     end
   end
   

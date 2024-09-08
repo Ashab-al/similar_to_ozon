@@ -4,18 +4,16 @@ class Api::ShopsController < ApplicationController
   def index
     outcome = Api::Store::SortStoreInteractor.run(sort_params)
     return render json: {success: false, message: errors_converter(outcome.errors) }, status: :unprocessable_entity if outcome.errors.present?
-      
-    render json: {success: true, shops: outcome.result }, status: :ok
+
+    render json: { success: true, shops: ShopBlueprint.render(outcome.result) }, status: :ok
   end
 
   def show
-    # binding.pry
     begin
       outcome = FindStoreInteractor.run(params)
-
       return render json: {success: false, message: errors_converter(outcome.errors) }, status: :unprocessable_entity if outcome.errors.present?
-      render json: {success: true, shop: outcome.result }, status: :ok
-
+      
+      render json: { success: true, shop: ShopBlueprint.render(outcome.result) }, status: :ok
     rescue ActionController::UrlGenerationError
       return render json: {success: false, message: I18n.t("error.messages.not_validated_params") }, status: :unprocessable_entity
     end
@@ -24,9 +22,9 @@ class Api::ShopsController < ApplicationController
   def create
     begin
       outcome = Api::Store::CreateStoreInteractor.run(store_params)
-
       return render json: {success: false, message: errors_converter(outcome.errors) }, status: :unprocessable_entity if outcome.errors.present?
-      render json: {success: true, shop: outcome.result }, status: :ok
+      
+      render json: { success: true, shop: ShopBlueprint.render(outcome.result) }, status: :ok
     rescue ActionController::ParameterMissing
       return render json: {success: false, message: I18n.t("error.messages.not_validated_params") }, status: :unprocessable_entity
     end
@@ -34,9 +32,9 @@ class Api::ShopsController < ApplicationController
 
   def categories
     outcome = Api::Store::SearchCategoryInteractor.run(params)
-    
     return render json: {success: false, message: errors_converter(outcome.errors) }, status: :unprocessable_entity if outcome.errors.present?
-    render json: {success: true, category: outcome.result }, status: :ok
+
+    render json: { success: true, payload: CategoryBlueprint.render(outcome.result) }, status: :ok
   end
 
   private

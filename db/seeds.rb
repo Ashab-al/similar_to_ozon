@@ -14,7 +14,8 @@ user = User.create!(
     last_name: "Фамилия",
     phone: "7 999 999 99 99",
     email: "example@mail.com",
-    age: 20
+    age: 20,
+    password: "admin123"
 )
 
 user.stores.create!(

@@ -10,8 +10,7 @@ class Api::ProductsController < ApplicationController
       outcome = Api::Product::SearchProductInteractor.run(params)
 
       return render json: {success: false, message: errors_converter(outcome.errors) }, status: :unprocessable_entity if outcome.errors.present?
-      render json: {success: true, product: outcome.result }, status: :ok
-
+      render json: { success: true, product: ProductBlueprint.render(outcome.result) }, status: :ok
     rescue ActionController::UrlGenerationError
       return render json: {success: false, message: I18n.t("error.messages.not_validated_params") }, status: :unprocessable_entity
     end
@@ -22,7 +21,7 @@ class Api::ProductsController < ApplicationController
       outcome = Api::Product::CreateProductInteractor.run(product_params)
 
       return render json: {success: false, message: errors_converter(outcome.errors) }, status: :unprocessable_entity if outcome.errors.present?
-      render json: {success: true, product: outcome.result }, status: :ok
+      render json: { success: true, product: ProductBlueprint.render(outcome.result) }, status: :ok
     rescue ActionController::ParameterMissing
       return render json: {success: false, message: I18n.t("error.messages.not_validated_params") }, status: :unprocessable_entity
     end
@@ -32,7 +31,7 @@ class Api::ProductsController < ApplicationController
     outcome = Api::Product::UpdateProductInteractor.run(product_params)
 
     return render json: {success: false, message: errors_converter(outcome.errors) }, status: :unprocessable_entity if outcome.errors.present?
-    render json: {success: true, product: outcome.result }, status: :ok
+    render json: { success: true, product: ProductBlueprint.render(outcome.result) }, status: :ok
   end
 
 	def product_params 
