@@ -42,7 +42,7 @@ RSpec.describe Api::ShopsController, type: :controller do
       it "successful finding of the store (json answer)" do 
         get :show, params: params
 
-        expect(JSON.parse(JSON.parse(response.body)["payload"])).to eq(shop_external_response(store_1))
+        expect(JSON.parse(JSON.parse(response.body)["shop"])).to eq(shop_external_response(store_1))
       end
     end
   end

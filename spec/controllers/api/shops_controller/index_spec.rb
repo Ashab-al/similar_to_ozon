@@ -49,7 +49,7 @@ RSpec.describe Api::ShopsController, type: :controller do
     it "passing the asc_or_desc parameter (json answer)" do 
       get :index, params: { :sort_store => { :asc_or_desc => 'DESC' } }
       # binding.pry
-      expect(JSON.parse(JSON.parse(response.body)["payload"])).to eq(shops_external_response(Store.with_product_count.order(products_count: :desc)))
+      expect(JSON.parse(JSON.parse(response.body)["shops"])).to eq(shops_external_response(Store.with_product_count.order(products_count: :desc)))
     end
 
     it "passing the parameter greater_than (https status answer)" do 
@@ -60,7 +60,7 @@ RSpec.describe Api::ShopsController, type: :controller do
     it "passing the parameter greater_than (json answer)" do 
       get :index, params: { :sort_store => { :greater_than => greater_than } }
 
-      expect(JSON.parse(JSON.parse(response.body)["payload"])).to eq(shops_external_response(Store.greater_than_products(greater_than)))
+      expect(JSON.parse(JSON.parse(response.body)["shops"])).to eq(shops_external_response(Store.greater_than_products(greater_than)))
     end
 
     it "passing the parameter less_than (https status answer)" do 
@@ -71,7 +71,7 @@ RSpec.describe Api::ShopsController, type: :controller do
     it "passing the parameter less_than (json answer)" do 
       get :index, params: { :sort_store => { :less_than => less_than } }
 
-      expect(JSON.parse(JSON.parse(response.body)["payload"])).to eq(shops_external_response(Store.less_than_products(less_than)))
+      expect(JSON.parse(JSON.parse(response.body)["shops"])).to eq(shops_external_response(Store.less_than_products(less_than)))
     end
 
     it "passing the parameter greater_than and less_than (https status answer)" do 
@@ -82,7 +82,7 @@ RSpec.describe Api::ShopsController, type: :controller do
     it "passing the parameter greater_than and less_than (json answer)" do 
       get :index, params: { :sort_store => { :greater_than => greater_than, :less_than => less_than } }
 
-      expect(JSON.parse(JSON.parse(response.body)["payload"])).to eq(shops_external_response(Store.less_and_greater_than_products(less_than, greater_than)))
+      expect(JSON.parse(JSON.parse(response.body)["shops"])).to eq(shops_external_response(Store.less_and_greater_than_products(less_than, greater_than)))
     end
   end
   
