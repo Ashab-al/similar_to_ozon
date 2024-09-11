@@ -72,4 +72,5 @@ Dox.configure do |config|
   config.headers_whitelist = ['Accept', 'X-Auth-Token']
   config.title = 'API'
   config.api_version = '2.0'
+  config.descriptions_location = 'spec/docs' 
 end

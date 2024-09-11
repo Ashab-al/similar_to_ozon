@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'dox'
 
 RSpec.describe Api::ShopsController, type: :controller do 
   include Devise::Test::ControllerHelpers

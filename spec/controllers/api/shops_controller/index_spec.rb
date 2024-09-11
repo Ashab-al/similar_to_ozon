@@ -1,13 +1,11 @@
 require 'rails_helper'
-require 'dox'
-require 'forwardable'
 
 RSpec.describe Api::ShopsController, type: :controller do 
   include Devise::Test::ControllerHelpers
   include ApiHelper::Request
   include Helpers::Responses::Shops
-  include Docs::Api::V1::Shops
-  include Docs::Api::V1::Shops::Index
+  include Docs::Api::V2::Shops
+  include Docs::Api::V2::Shops::Index
 
   render_views
   
@@ -42,49 +40,51 @@ RSpec.describe Api::ShopsController, type: :controller do
 
   before (:each) { get :index, params: params }
 
-  context "Success" do 
-    it "passing the asc_or_desc parameter (http status answer)", :dox do 
-      get :index, params: { :sort_store => {:asc_or_desc => 'DESC'} }
+  describe 'GET #index', dox: true do
+    context "Success" do 
+      it "passing the asc_or_desc parameter (http status answer)", dox: true do 
+        get :index, params: { :sort_store => {:asc_or_desc => 'DESC'} }
 
-      expect(response).to have_http_status(:ok)
-    end
-    it "passing the asc_or_desc parameter (json answer)" do 
-      get :index, params: { :sort_store => { :asc_or_desc => 'DESC' } }
-      # binding.pry
-      expect(JSON.parse(JSON.parse(response.body)["shops"])).to eq(shops_external_response(Store.with_product_count.order(products_count: :desc)))
-    end
+        expect(response).to have_http_status(:ok)
+      end
+      it "passing the asc_or_desc parameter (json answer)" do 
+        get :index, params: { :sort_store => { :asc_or_desc => 'DESC' } }
+        # binding.pry
+        expect(JSON.parse(JSON.parse(response.body)["shops"])).to eq(shops_external_response(Store.with_product_count.order(products_count: :desc)))
+      end
 
-    it "passing the parameter greater_than (https status answer)" do 
-      get :index, params: { :sort_store => { :greater_than => greater_than } }
+      it "passing the parameter greater_than (https status answer)" do 
+        get :index, params: { :sort_store => { :greater_than => greater_than } }
 
-      expect(response).to have_http_status(:ok)
-    end
-    it "passing the parameter greater_than (json answer)" do 
-      get :index, params: { :sort_store => { :greater_than => greater_than } }
+        expect(response).to have_http_status(:ok)
+      end
+      it "passing the parameter greater_than (json answer)" do 
+        get :index, params: { :sort_store => { :greater_than => greater_than } }
 
-      expect(JSON.parse(JSON.parse(response.body)["shops"])).to eq(shops_external_response(Store.greater_than_products(greater_than)))
-    end
+        expect(JSON.parse(JSON.parse(response.body)["shops"])).to eq(shops_external_response(Store.greater_than_products(greater_than)))
+      end
 
-    it "passing the parameter less_than (https status answer)" do 
-      get :index, params: { :sort_store => { :less_than => less_than } }
+      it "passing the parameter less_than (https status answer)" do 
+        get :index, params: { :sort_store => { :less_than => less_than } }
 
-      expect(response).to have_http_status(:ok)
-    end
-    it "passing the parameter less_than (json answer)" do 
-      get :index, params: { :sort_store => { :less_than => less_than } }
+        expect(response).to have_http_status(:ok)
+      end
+      it "passing the parameter less_than (json answer)" do 
+        get :index, params: { :sort_store => { :less_than => less_than } }
 
-      expect(JSON.parse(JSON.parse(response.body)["shops"])).to eq(shops_external_response(Store.less_than_products(less_than)))
-    end
+        expect(JSON.parse(JSON.parse(response.body)["shops"])).to eq(shops_external_response(Store.less_than_products(less_than)))
+      end
 
-    it "passing the parameter greater_than and less_than (https status answer)" do 
-      get :index, params: { :sort_store => { :greater_than => greater_than, :less_than => less_than } }
+      it "passing the parameter greater_than and less_than (https status answer)" do 
+        get :index, params: { :sort_store => { :greater_than => greater_than, :less_than => less_than } }
 
-      expect(response).to have_http_status(:ok)
-    end
-    it "passing the parameter greater_than and less_than (json answer)" do 
-      get :index, params: { :sort_store => { :greater_than => greater_than, :less_than => less_than } }
+        expect(response).to have_http_status(:ok)
+      end
+      it "passing the parameter greater_than and less_than (json answer)" do 
+        get :index, params: { :sort_store => { :greater_than => greater_than, :less_than => less_than } }
 
-      expect(JSON.parse(JSON.parse(response.body)["shops"])).to eq(shops_external_response(Store.less_and_greater_than_products(less_than, greater_than)))
+        expect(JSON.parse(JSON.parse(response.body)["shops"])).to eq(shops_external_response(Store.less_and_greater_than_products(less_than, greater_than)))
+      end
     end
   end
   
