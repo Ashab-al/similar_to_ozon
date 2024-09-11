@@ -23,6 +23,7 @@ gem 'devise-jwt'
 gem 'jsonapi-serializer'
 gem 'blueprinter'
 gem 'oj'
+gem 'forwardable'
 # end
 
 group :development, :test do
@@ -41,4 +42,5 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
   gem 'rspec-rails'
+  gem 'dox', require: false
 end

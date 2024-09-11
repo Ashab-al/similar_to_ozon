@@ -1,5 +1,5 @@
 require 'rails_helper'
-
+require 'dox'
 
 RSpec.describe Api::ShopsController, type: :controller do 
   include Devise::Test::ControllerHelpers
@@ -31,7 +31,7 @@ RSpec.describe Api::ShopsController, type: :controller do
     get :show, params: params
   end
 
-  context "when signed in" do  
+  context "when signed in", :dox do  
     context "Success" do 
       it "successful finding of the store (http status answer)" do 
         get :show, params: params

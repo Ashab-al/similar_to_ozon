@@ -1,10 +1,13 @@
 require 'rails_helper'
-
+require 'dox'
+require 'forwardable'
 
 RSpec.describe Api::ShopsController, type: :controller do 
   include Devise::Test::ControllerHelpers
   include ApiHelper::Request
   include Helpers::Responses::Shops
+  include Docs::Api::V1::Shops
+  include Docs::Api::V1::Shops::Index
 
   render_views
   
@@ -40,8 +43,7 @@ RSpec.describe Api::ShopsController, type: :controller do
   before (:each) { get :index, params: params }
 
   context "Success" do 
-
-    it "passing the asc_or_desc parameter (http status answer)" do 
+    it "passing the asc_or_desc parameter (http status answer)", :dox do 
       get :index, params: { :sort_store => {:asc_or_desc => 'DESC'} }
 
       expect(response).to have_http_status(:ok)
