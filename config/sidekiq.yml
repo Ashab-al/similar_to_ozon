@@ -1,0 +1,14 @@
+development:
+  :concurrency: 1
+  :queues:
+    - default
+  :max_retries: 1
+  :redis:
+    :url: redis://localhost:6379/0
+production:
+  :concurrency: <%= ENV['SIDEKIQ_CONCURRENCY'] || 15 %>
+  :queues:
+    - default
+  :max_retries: 1
+  :redis:
+    :url: redis://localhost:6379/0

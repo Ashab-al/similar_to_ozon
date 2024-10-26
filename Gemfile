@@ -10,7 +10,7 @@ gem "importmap-rails"
 gem "turbo-rails"
 gem "stimulus-rails"
 gem "jbuilder"
-gem "redis", ">= 4.0.1"
+gem "redis"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
 
@@ -23,6 +23,7 @@ gem 'devise-jwt'
 gem 'jsonapi-serializer'
 gem 'blueprinter'
 gem 'oj'
+gem 'sidekiq'
 # end
 
 group :development, :test do
